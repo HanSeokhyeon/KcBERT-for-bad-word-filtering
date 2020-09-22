@@ -2,3 +2,5 @@
 
 badword/
 secret_info.py
+
+__pycache__
