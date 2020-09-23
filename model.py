@@ -5,7 +5,7 @@ from pprint import pprint
 
 from torch.utils.data import DataLoader, TensorDataset
 from torch.optim.lr_scheduler import ExponentialLR
-from transformers import BertForSequenceClassification, BertTokenizer, AdamW
+from transformers import BertTokenizer, AdamW
 from pytorch_lightning import LightningModule
 
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
@@ -14,15 +14,16 @@ import re
 import emoji
 from soynlp.normalizer import repeat_normalize
 
-from modeling_bert_badword import *
+from modeling_purifier import BertForSequenceClassification
+from modeling_bert_badword import BertForBadWordFiltering
 
 
 class Model(LightningModule):
     def __init__(self, options):
         super().__init__()
         self.args = options
-        # self.bert = BertForSequenceClassification.from_pretrained(self.args.pretrained_model)
-        self.bert = BertForBadWordFiltering.from_pretrained(self.args.pretrained_model)
+        self.bert = BertForSequenceClassification.from_pretrained(self.args.pretrained_model)
+        # self.bert = BertForBadWordFiltering.from_pretrained(self.args.pretrained_model)
         self.tokenizer = BertTokenizer.from_pretrained(
             self.args.pretrained_tokenizer
             if self.args.pretrained_tokenizer

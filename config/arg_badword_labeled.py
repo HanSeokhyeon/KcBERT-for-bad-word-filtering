@@ -8,7 +8,7 @@ class Arg:
     auto_batch_size: str = 'power'  # Let PyTorch Lightening find the best batch size
     batch_size: int = 0  # Optional, Train/Eval Batch Size. Overrides `auto_batch_size`
     lr: float = 5e-6  # Starting Learning Rate
-    epochs: int = 10  # Max Epochs
+    epochs: int = 20  # Max Epochs
     max_length: int = 150  # Max Length input size
     report_cycle: int = 100  # Report (Train Metrics) Cycle
     train_data_path: str = "./badword/ratings_labeled_train.csv"  # Train Dataset file

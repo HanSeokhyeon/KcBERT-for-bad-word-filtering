@@ -4,6 +4,7 @@ MAINTAINER  sah0322@naver.com
 RUN         apt-get -y update && apt-get -y install git
 RUN         pip install --upgrade pip
 RUN         pip install transformers pytorch_lightning emoji soynlp pandas pymongo
+RUN         pip install boto3
 
 WORKDIR     /opt/project
 
