@@ -33,7 +33,8 @@ def main():
     )
     trainer.fit(model)
 
-    # model.save_model()
+    model.save_model()
+    model.upload_model()
 
 
 if __name__ == '__main__':

@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import torch
 
@@ -200,5 +201,11 @@ class Model(LightningModule):
         )
 
     def save_model(self):
-        self.bert.save_pretrained('bert-badword/')
-        self.tokenizer.save_pretrained('tokenizer-badword/')
+        self.bert.save_pretrained('bert-badword-puri/')
+        self.tokenizer.save_pretrained('tokenizer-badword-puri/')
+
+    @staticmethod
+    def upload_model():
+        os.system("transformers-cli login")
+        os.system("transformers-cli upload bert-badword-puri/")
+        os.system("transformers-cli upload tokenizer-badword-puri/")
