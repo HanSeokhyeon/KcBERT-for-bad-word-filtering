@@ -1,11 +1,13 @@
 import torch
 
-from transformers import BertForSequenceClassification, BertTokenizer
+from transformers import BertTokenizer
 from pytorch_lightning import LightningModule
 
 import re
 import emoji
 from soynlp.normalizer import repeat_normalize
+
+from modeling_purifier import BertForSequenceClassification
 
 
 class Model(LightningModule):
@@ -32,11 +34,20 @@ class Model(LightningModule):
         text = url_pattern.sub('', text)
         text = text.strip()
         text = repeat_normalize(text, num_repeats=2)
-        return self.tokenizer(text, max_length=self.args.max_length, truncation=True, return_tensors="pt")
+        print(text)
+        return self.tokenizer(text, max_length=self.args.max_length, truncation=True, return_tensors="pt"), self.tokenizer.tokenize(text)
 
     def inference(self, text):
-        text = self.preprocess_text(text)
+        inputs, text = self.preprocess_text(text)
+        print(inputs)
+        print(text)
+
+        dec = self.tokenizer.decode(inputs['input_ids'].numpy()[0], skip_special_tokens=True)
+        print(dec)
+        # cls_info의 'prob'에서  [0][0]가 이제 문장에서 확률, 긍까 그걸 리턴?
         with torch.no_grad():
-            logits = self(**text)[0]
+            logits, cls_info = self(**inputs)
+            print(logits)
+            print(cls_info.keys())
             pred = logits[0].argmax()
         return logits[0].cpu().numpy(), pred.cpu().numpy()

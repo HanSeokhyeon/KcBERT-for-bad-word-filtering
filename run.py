@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
-# import time
-from config.arg_badword_pretrained import Arg
+import time
+from config.arg_badword_pretrained_puri import Arg
 from model_for_inference import Model
 
 args = Arg()
 # 모델 통과
 print("Model importing...")
 model = Model(args)
+model.eval()
 
 
 def inference(sentence):
-    # start = time.time()
+    start = time.time()
     logits, pred = model.inference(sentence)
-    # print("processing time {}s".format(time.time() - start))
+    print("processing time {}s".format(time.time() - start))
     return logits, pred
 
 
