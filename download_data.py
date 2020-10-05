@@ -63,7 +63,7 @@ class DataDownloader:
         df_1 = pd.DataFrame(data_1, columns=['document', 'label'])
         df_1.index.name = '_id'
 
-        df = pd.concat((df_0, df_1), axis=1)
+        df = pd.concat((df_0, df_1), axis=0)
         df.to_csv("/opt/project/badword/ratings_labeled.csv")
 
         n_train_0 = int(len(data_0)*(1-self.test_ratio))
@@ -75,8 +75,8 @@ class DataDownloader:
         df_train_0, df_test_0 = df_0[:n_train_0], df_0[n_train_0:]
         df_train_1, df_test_1 = df_1[:n_train_1], df_1[n_train_1:]
 
-        df_train = pd.concat((df_train_0, df_train_1), axis=1)
-        df_test = pd.concat((df_test_0, df_test_1), axis=1)
+        df_train = pd.concat((df_train_0, df_train_1), axis=0)
+        df_test = pd.concat((df_test_0, df_test_1), axis=0)
 
         df_train = df_train.sample(frac=1)
         df_test = df_test.sample(frac=1)

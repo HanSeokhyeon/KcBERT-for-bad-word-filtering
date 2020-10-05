@@ -20,6 +20,7 @@ class Model(LightningModule):
             if self.args.pretrained_tokenizer
             else self.args.pretrained_model
         )
+        self.masking_id = self.tokenizer("*", max_length=self.args.max_length, truncation=True, return_tensors="pt")['input_ids'][0][1:-1].tolist()
 
     def forward(self, **kwargs):
         return self.bert(**kwargs)
@@ -34,20 +35,41 @@ class Model(LightningModule):
         text = url_pattern.sub('', text)
         text = text.strip()
         text = repeat_normalize(text, num_repeats=2)
-        print(text)
-        return self.tokenizer(text, max_length=self.args.max_length, truncation=True, return_tensors="pt"), self.tokenizer.tokenize(text)
+        return text, self.tokenizer(text, max_length=self.args.max_length, truncation=True, return_tensors="pt"), self.tokenizer.tokenize(text)
 
     def inference(self, text):
-        inputs, text = self.preprocess_text(text)
-        print(inputs)
         print(text)
 
-        dec = self.tokenizer.decode(inputs['input_ids'].numpy()[0], skip_special_tokens=True)
-        print(dec)
-        # cls_info의 'prob'에서  [0][0]가 이제 문장에서 확률, 긍까 그걸 리턴?
-        with torch.no_grad():
-            logits, cls_info = self(**inputs)
-            print(logits)
-            print(cls_info.keys())
-            pred = logits[0].argmax()
-        return logits[0].cpu().numpy(), pred.cpu().numpy()
+        text, inputs, text_tokenized = self.preprocess_text(text)
+
+        while True:
+            with torch.no_grad():
+                logits, cls_info = self(**inputs)
+                pred = logits[0].argmax()
+
+                if pred:
+                    input_ids = inputs['input_ids'].numpy()[0].tolist()
+                    toxic_ids = torch.argsort(cls_info['probs'][0][0][0][1:-1], descending=True)
+
+                    idx = 0
+                    while input_ids[toxic_ids.tolist()[idx]+1] == self.masking_id[0]:
+                        idx += 1
+                    toxic_id = toxic_ids.tolist()[idx]
+
+                    masking_text = self.tokenizer.decode(input_ids[toxic_id+1], skip_special_tokens=True).replace("#", "").replace(" ", "")
+
+                    input_ids = input_ids[:toxic_id+1] + self.masking_id*len(masking_text) + input_ids[toxic_id+2:]
+
+                    dec = self.tokenizer.decode(input_ids, skip_special_tokens=True)
+                    print(dec)
+
+                    inputs = {
+                             'input_ids': torch.LongTensor(input_ids).unsqueeze(0),
+                             'token_type_ids': torch.LongTensor([[0]*len(input_ids)]),
+                             'attention_mask': torch.LongTensor([[1]*len(input_ids)])
+                             }
+                else:
+                    print(text)
+                    break
+        return torch.exp(logits[0]).cpu().numpy(), pred.cpu().numpy()
+

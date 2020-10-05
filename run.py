@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import time
+import pandas as pd
+
 from config.arg_badword_pretrained_puri import Arg
 from model_for_inference import Model
 
@@ -18,5 +20,8 @@ def inference(sentence):
 
 
 if __name__ == '__main__':
-    probability, label = inference("돈이 있다는 조건으로. 돈없는 대학 생활은 좃이제.")
-    print(probability, label)
+    test = pd.read_csv("badword/ratings_labeled_test.csv")
+    for i in range(100):
+        text, label = test.iloc[i]['document'], test.iloc[i]['label']
+        probability, pred = inference(text)
+        print("label: {},\tpred: {},\tprobability: {}\t{}".format(label, pred, *probability))
