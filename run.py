@@ -14,8 +14,8 @@ model.eval()
 
 def inference(sentence):
     start = time.time()
-    logits, pred = model.inference(sentence)
-    print("processing time {}s".format(time.time() - start))
+    logits, pred, sentence_filtered = model.inference(sentence)
+    print("processing time {:.4f}s".format(time.time() - start))
     return logits, pred
 
 
@@ -24,4 +24,4 @@ if __name__ == '__main__':
     for i in range(100):
         text, label = test.iloc[i]['document'], test.iloc[i]['label']
         probability, pred = inference(text)
-        print("label: {},\tpred: {},\tprobability: {}\t{}".format(label, pred, *probability))
+        print("label: {},\tpred: {},\tprobability: {:.2f}\t{:.2f}\n".format(label, pred, *probability))

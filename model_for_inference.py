@@ -40,12 +40,18 @@ class Model(LightningModule):
     def inference(self, text):
         print(text)
 
+        flag = False
+
         text, inputs, text_tokenized = self.preprocess_text(text)
 
         while True:
             with torch.no_grad():
                 logits, cls_info = self(**inputs)
                 pred = logits[0].argmax()
+
+                if not flag:
+                    logits_first, pred_first = logits[0], pred
+                    flag = True
 
                 if pred:
                     input_ids = inputs['input_ids'].numpy()[0].tolist()
@@ -60,8 +66,8 @@ class Model(LightningModule):
 
                     input_ids = input_ids[:toxic_id+1] + self.masking_id*len(masking_text) + input_ids[toxic_id+2:]
 
-                    dec = self.tokenizer.decode(input_ids, skip_special_tokens=True)
-                    print(dec)
+                    text = self.tokenizer.decode(input_ids, skip_special_tokens=True)
+                    print(text)
 
                     inputs = {
                              'input_ids': torch.LongTensor(input_ids).unsqueeze(0),
@@ -71,5 +77,4 @@ class Model(LightningModule):
                 else:
                     print(text)
                     break
-        return torch.exp(logits[0]).cpu().numpy(), pred.cpu().numpy()
-
+        return torch.nn.functional.softmax(logits_first).cpu().numpy(), pred_first.cpu().numpy(), text
