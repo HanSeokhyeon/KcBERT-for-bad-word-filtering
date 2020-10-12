@@ -16,7 +16,6 @@ import emoji
 from soynlp.normalizer import repeat_normalize
 
 from modeling_purifier import BertForSequenceClassification
-from modeling_bert_badword import BertForBadWordFiltering
 
 
 class Model(LightningModule):

@@ -75,6 +75,12 @@ class DataDownloader:
         df_train_0, df_test_0 = df_0[:n_train_0], df_0[n_train_0:]
         df_train_1, df_test_1 = df_1[:n_train_1], df_1[n_train_1:]
 
+        train_ratio, test_ratio = n_train_0 // n_train_1+1, n_test_0 // n_test_1+1
+        df_train_1 = pd.concat([df_train_1]*train_ratio, axis=0)
+        df_train_1 = df_train_1[:n_train_0]
+        df_test_1 = pd.concat([df_test_1]*test_ratio, axis=0)
+        df_test_1 = df_test_1[:n_test_0]
+
         df_train = pd.concat((df_train_0, df_train_1), axis=0)
         df_test = pd.concat((df_test_0, df_test_1), axis=0)
 
@@ -85,9 +91,9 @@ class DataDownloader:
         df_test.to_csv("/opt/project/badword/ratings_labeled_test.csv")
 
         print("{}/{} sentences\n0: {}\t1: {}\n0: {}\t1: {} train\n0: {}\t1: {} test".format(len(data_0)+len(data_1), i,
-                                                                                         len(data_0), len(data_1),
-                                                                                         n_train_0, n_train_1,
-                                                                                         n_test_0, n_test_1))
+                                                                                            len(data_0), len(data_1),
+                                                                                            len(df_train_0), len(df_train_1),
+                                                                                            len(df_test_0), len(df_test_1)))
 
 
 if __name__ == '__main__':

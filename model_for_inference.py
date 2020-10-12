@@ -57,9 +57,15 @@ class Model(LightningModule):
                     input_ids = inputs['input_ids'].numpy()[0].tolist()
                     toxic_ids = torch.argsort(cls_info['probs'][0][0][0][1:-1], descending=True)
 
-                    idx = 0
-                    while input_ids[toxic_ids.tolist()[idx]+1] == self.masking_id[0]:
-                        idx += 1
+                    no_word = False
+                    for idx in range(len(toxic_ids)):
+                        if input_ids[toxic_ids.tolist()[idx]+1] != self.masking_id[0]:
+                            no_word = True
+                            break
+
+                    if not no_word:
+                        break
+
                     toxic_id = toxic_ids.tolist()[idx]
 
                     masking_text = self.tokenizer.decode(input_ids[toxic_id+1], skip_special_tokens=True).replace("#", "").replace(" ", "")
