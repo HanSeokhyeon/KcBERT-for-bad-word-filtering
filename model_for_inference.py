@@ -55,7 +55,10 @@ class Model(LightningModule):
 
                 if pred:
                     input_ids = inputs['input_ids'].numpy()[0].tolist()
-                    toxic_ids = torch.argsort(cls_info['probs'][0][0][0][1:-1], descending=True)
+
+                    # print(cls_info['probs'].shape)
+
+                    toxic_ids = torch.argsort(cls_info['probs'][0][0][1:-1], descending=True)
 
                     no_word = False
                     for idx in range(len(toxic_ids)):

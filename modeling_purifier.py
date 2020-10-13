@@ -817,8 +817,8 @@ class BertForSequenceClassification(BertPreTrainedModel):
         return mean_output_layers
 
     def forward(self, input_ids, token_type_ids=None, attention_mask=None, labels=None, front_pooler=True,
-                query=[12], key=[1, 2, 3], value=[1, 2, 3], query_att=True, key_att=True,
-                multi_head=False, dropout=False, back_pooler=True):
+                query=[12], key=[1, 2, 3], value=[1, 2, 3], query_att=False, key_att=False,
+                multi_head=True, dropout=False, back_pooler=True):
         outputs = self.bert(input_ids, token_type_ids, attention_mask,
                             output_all_encoded_layers=True)
 
