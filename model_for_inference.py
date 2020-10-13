@@ -58,7 +58,9 @@ class Model(LightningModule):
 
                     # print(cls_info['probs'].shape)
 
-                    toxic_ids = torch.argsort(cls_info['probs'][0][0][1:-1], descending=True)
+                    toxic_ids = torch.argsort(cls_info['probs'][0][0][0][1:-1], descending=True)
+
+                    # print(toxic_ids.shape)
 
                     no_word = False
                     for idx in range(len(toxic_ids)):
