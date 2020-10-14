@@ -78,8 +78,8 @@ class DataDownloader:
         train_ratio, test_ratio = n_train_0 // n_train_1+1, n_test_0 // n_test_1+1
         df_train_1 = pd.concat([df_train_1]*train_ratio, axis=0)
         df_train_1 = df_train_1[:n_train_0]
-        df_test_1 = pd.concat([df_test_1]*test_ratio, axis=0)
-        df_test_1 = df_test_1[:n_test_0]
+        # df_test_1 = pd.concat([df_test_1]*test_ratio, axis=0)
+        # df_test_1 = df_test_1[:n_test_0]
 
         df_train = pd.concat((df_train_0, df_train_1), axis=0)
         df_test = pd.concat((df_test_0, df_test_1), axis=0)
