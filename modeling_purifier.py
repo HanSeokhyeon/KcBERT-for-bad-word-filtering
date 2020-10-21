@@ -132,7 +132,7 @@ class BertConfig(object):
     def __init__(self,
                  vocab_size_or_config_json_file,
                  hidden_size=768,
-                 num_hidden_layers=12,
+                 num_hidden_layers=24,
                  num_attention_heads=12,
                  intermediate_size=3072,
                  hidden_act="gelu",
@@ -817,7 +817,7 @@ class BertForSequenceClassification(BertPreTrainedModel):
         return mean_output_layers
 
     def forward(self, input_ids, token_type_ids=None, attention_mask=None, labels=None, front_pooler=True,
-                query=[0], key=[0], value=[0], query_att=False, key_att=False,
+                query=[24], key=[0], value=[0], query_att=False, key_att=False,
                 multi_head=True, dropout=False, back_pooler=True):
         outputs = self.bert(input_ids, token_type_ids, attention_mask,
                             output_all_encoded_layers=True)

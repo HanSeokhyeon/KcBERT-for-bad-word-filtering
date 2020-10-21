@@ -2,7 +2,7 @@
 import time
 import pandas as pd
 
-from config.arg_badword_pretrained_puri_000 import Arg
+from config.arg_badword_pretrained_puri_2400 import Arg
 from model_for_inference import Model
 
 args = Arg()
