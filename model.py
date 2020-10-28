@@ -200,11 +200,11 @@ class Model(LightningModule):
         )
 
     def save_model(self):
-        self.bert.save_pretrained('bert-badword-puri-2400/')
-        self.tokenizer.save_pretrained('tokenizer-badword-puri-2400/')
+        self.bert.save_pretrained('bert-badword-puri-1200-base/')
+        self.tokenizer.save_pretrained('tokenizer-badword-puri-1200-base/')
 
     @staticmethod
     def upload_model():
         os.system("transformers-cli login")
-        os.system("transformers-cli upload bert-badword-puri-2400/")
-        os.system("transformers-cli upload tokenizer-badword-puri-2400/")
+        os.system("transformers-cli upload bert-badword-puri-1200-base/")
+        os.system("transformers-cli upload tokenizer-badword-puri-1200-base/")

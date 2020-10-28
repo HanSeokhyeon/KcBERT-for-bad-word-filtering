@@ -2,7 +2,7 @@ import torch
 
 from pytorch_lightning import Trainer, seed_everything
 
-from config.arg_badword_labeled import Arg
+from config.arg_badword_labeled_base import Arg
 from model import Model
 
 args = Arg()
