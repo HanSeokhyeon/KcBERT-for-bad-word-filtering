@@ -6,7 +6,7 @@ from pprint import pprint
 
 from torch.utils.data import DataLoader, TensorDataset
 from torch.optim.lr_scheduler import ExponentialLR
-from transformers import BertTokenizer, AdamW
+from transformers import BertForSequenceClassification, BertTokenizer, AdamW
 from pytorch_lightning import LightningModule
 
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
@@ -15,7 +15,7 @@ import re
 import emoji
 from soynlp.normalizer import repeat_normalize
 
-from modeling_purifier import BertForSequenceClassification
+# from modeling_purifier import BertForSequenceClassification
 
 
 class Model(LightningModule):
@@ -23,7 +23,6 @@ class Model(LightningModule):
         super().__init__()
         self.args = options
         self.bert = BertForSequenceClassification.from_pretrained(self.args.pretrained_model)
-        # self.bert = BertForBadWordFiltering.from_pretrained(self.args.pretrained_model)
         self.tokenizer = BertTokenizer.from_pretrained(
             self.args.pretrained_tokenizer
             if self.args.pretrained_tokenizer
@@ -200,11 +199,11 @@ class Model(LightningModule):
         )
 
     def save_model(self):
-        self.bert.save_pretrained('bert-badword-puri-1200-base/')
-        self.tokenizer.save_pretrained('tokenizer-badword-puri-1200-base/')
+        self.bert.save_pretrained('bert-badword-large/')
+        self.tokenizer.save_pretrained('tokenizer-badword-large/')
 
     @staticmethod
     def upload_model():
         os.system("transformers-cli login")
-        os.system("transformers-cli upload bert-badword-puri-1200-base/")
-        os.system("transformers-cli upload tokenizer-badword-puri-1200-base/")
+        os.system("transformers-cli upload -y bert-badword-large/")
+        os.system("transformers-cli upload -y tokenizer-badword-large/")
